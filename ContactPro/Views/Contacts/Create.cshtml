@@ -25,56 +25,56 @@
             <div class="col-12 col-lg-8">
                 <div class="row">
                     <div class="col-12 col-lg-6">
-                        <label asp-for="FirstName" class="control-label"></label>
+                        <label asp-for="FirstName" class="form-label"></label>
                         <input asp-for="FirstName" class="form-control" /> <!-- the asp-for must match model property -->
                         <span asp-validation-for="FirstName" class="text-danger"></span>
                     </div>
                     <div class="col-12 col-lg-6">
-                        <label asp-for="LastName" class="control-label"></label>
+                        <label asp-for="LastName" class="form-label"></label>
                         <input asp-for="LastName" class="form-control" />
                         <span asp-validation-for="LastName" class="text-danger"></span>
                     </div>
                     <div class="col-12 col-lg-6 mt-2">
-                        <label asp-for="Email" class="control-label"></label>
+                        <label asp-for="Email" class="form-label"></label>
                         <input asp-for="Email" class="form-control" />
                         <span asp-validation-for="Email" class="text-danger"></span>
                     </div>
                     <div class="col-12 col-lg-6 mt-2">
-                        <label asp-for="PhoneNumber" class="control-label"></label>
+                        <label asp-for="PhoneNumber" class="form-label"></label>
                         <input asp-for="PhoneNumber" class="form-control" />
                         <span asp-validation-for="PhoneNumber" class="text-danger"></span>
                     </div>
                     <div class="col-12 mt-2">
-                        <label asp-for="Address1" class="control-label"></label>
+                        <label asp-for="Address1" class="form-label"></label>
                         <input asp-for="Address1" class="form-control" />
                         <span asp-validation-for="Address1" class="text-danger"></span>
                     </div>
                     <div class="col-12 mt-2">
-                        <label asp-for="Address2" class="control-label"></label>
+                        <label asp-for="Address2" class="form-label"></label>
                         <input asp-for="Address2" class="form-control" />
                         <span asp-validation-for="Address2" class="text-danger"></span>
                     </div>
                     <div class="col-12 col-lg-6 mt-2">
-                        <label asp-for="City" class="control-label"></label>
+                        <label asp-for="City" class="form-label"></label>
                         <input asp-for="City" class="form-control" />
                         <span asp-validation-for="City" class="text-danger"></span>
                     </div>
                     <div class="col-12 col-lg-4 mt-2">
-                        <label asp-for="State" class="control-label"></label>
+                        <label asp-for="State" class="form-label"></label>
                         <select asp-for="State" class="form-control" asp-items="ViewBag.StatesList"></select>
                         <span asp-validation-for="State" class="text-danger"></span>
                     </div>
                     <div class="col-12 col-lg-2 mt-2">
-                        <label asp-for="ZipCode" class="control-label"></label>
+                        <label asp-for="ZipCode" class="form-label"></label>
                         <input asp-for="ZipCode" class="form-control" />
                         <span asp-validation-for="ZipCode" class="text-danger"></span>
                     </div>
                     <div class="col-12 col-lg-6 mt-2">
-                        <label asp-for="Categories" class="control-label"></label>
+                        <label asp-for="Categories" class="form-label"></label>
                         <select name="CategoryList" class="form-select" asp-items="ViewBag.CategoryList" multiple></select>
                     </div>
                     <div class="col-12 col-lg-6 mt-2">
-                        <label asp-for="BirthDate" class="control-label"></label>
+                        <label asp-for="BirthDate" class="form-label"></label>
                         <input asp-for="BirthDate" class="form-control" />
                         <span asp-validation-for="BirthDate" class="text-danger"></span>
                     </div>
@@ -88,7 +88,7 @@
 </div>
 
 <div>
-    <a class="mt-2" asp-action="Index">Back to List</a>
+    <a class="mt-2 btn btn-primary rounded-pill" asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {

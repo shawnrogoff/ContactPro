@@ -1,5 +1,6 @@
 ﻿using ContactPro.Data;
 using ContactPro.Models;
+using ContactPro.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -19,13 +20,48 @@ namespace ContactPro.Controllers
             _userManager = userManager;
         }
 
+
         // GET: Categories
         [Authorize]
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Categories.Include(c => c.User);
-            return View(await applicationDbContext.ToListAsync());
+            string appUserId = _userManager.GetUserId(User);
+
+            var categories = await _context.Categories.Where(c => c.AppUserID == appUserId)
+                                                .Include(c => c.User)
+                                                .ToListAsync();
+            
+            return View(categories);
         }
+
+
+        [Authorize]
+        public async Task<IActionResult> EmailCategory(int id)
+        {
+            string appUserId = _userManager.GetUserId(User);
+
+            Category? category = await _context.Categories
+                                              .Include(c => c.Contacts)
+                                              .FirstOrDefaultAsync(c => c.Id == id && c.AppUserID == appUserId);
+
+            List<string?> emails = category!.Contacts.Select(c => c.Email).ToList();
+
+            EmailData emailData = new EmailData()
+            {
+                GroupName = category.Name,
+                EmailAddress = String.Join(";", emails),
+                Subject = $"Group Message: {category.Name}"
+            };
+
+            EmailCategoryViewModel model = new EmailCategoryViewModel()
+            {
+                Contacts = category.Contacts.ToList(),
+                EmailData = emailData
+            };
+
+            return View();
+        }
+
 
         // GET: Categories/Details/5
         [Authorize]
@@ -47,6 +83,7 @@ namespace ContactPro.Controllers
             return View(category);
         }
 
+
         // GET: Categories/Create
         [Authorize]
         public IActionResult Create()
@@ -55,22 +92,26 @@ namespace ContactPro.Controllers
             return View();
         }
 
+
         // POST: Categories/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,AppUserID,Name")] Category category)
         {
+            ModelState.Remove("AppUserId");
+
             if (ModelState.IsValid)
             {
+                string appUserId = _userManager.GetUserId(User);
+                category.AppUserID = appUserId;
                 _context.Add(category);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AppUserID"] = new SelectList(_context.Users, "Id", "Id", category.AppUserID);
+
             return View(category);
         }
+
 
         // GET: Categories/Edit/5
         [Authorize]
@@ -81,18 +122,21 @@ namespace ContactPro.Controllers
                 return NotFound();
             }
 
-            var category = await _context.Categories.FindAsync(id);
+            string appUserId = _userManager.GetUserId(User);
+
+            var category = await _context.Categories.Where(c => c.Id == id && c.AppUserID == appUserId)
+                                              .FirstOrDefaultAsync();
+
             if (category == null)
             {
                 return NotFound();
             }
-            ViewData["AppUserID"] = new SelectList(_context.Users, "Id", "Id", category.AppUserID);
+
             return View(category);
         }
 
+
         // POST: Categories/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,AppUserID,Name")] Category category)
@@ -106,6 +150,8 @@ namespace ContactPro.Controllers
             {
                 try
                 {
+                    string appUserId = _userManager.GetUserId(User);
+                    category.AppUserID = appUserId;
                     _context.Update(category);
                     await _context.SaveChangesAsync();
                 }
@@ -120,11 +166,14 @@ namespace ContactPro.Controllers
                         throw;
                     }
                 }
+
                 return RedirectToAction(nameof(Index));
             }
+
             ViewData["AppUserID"] = new SelectList(_context.Users, "Id", "Id", category.AppUserID);
             return View(category);
         }
+
 
         // GET: Categories/Delete/5
         [Authorize]
@@ -145,6 +194,7 @@ namespace ContactPro.Controllers
 
             return View(category);
         }
+
 
         // POST: Categories/Delete/5
         [HttpPost, ActionName("Delete")]

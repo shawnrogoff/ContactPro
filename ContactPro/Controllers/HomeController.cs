@@ -31,5 +31,25 @@ namespace ContactPro.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
+        [Route("/Home/HandleError/{0}")]
+        public IActionResult HandleError(int code)
+        {
+            var customError = new CustomError();
+
+            customError.code = code;
+
+            if (code == 404)
+            {
+                customError.message = "The page you are looking for might have been removed, had its name changed, or is temporarily unavailable.";
+                // could make a custom error page specifically for 404, and return it here
+            }
+            else
+            {
+                customError.message = "Sorry, something went wrong.";
+            }
+
+            return View("~/Views/Shared/CustomError.cshtml", customError);
+        }
     }
 }

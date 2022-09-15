@@ -220,3 +220,8 @@ main {
         font-size: 3.5rem;
     }
 }
+
+.drop-shadow {
+    filter: drop-shadow(5px 5px 10px #000000);
+    -webkit-filter: drop-shadow(5px 5px 5px #000000);
+}

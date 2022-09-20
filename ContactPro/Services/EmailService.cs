@@ -39,6 +39,11 @@ public class EmailService : IEmailSender
 
         try
         {
+            //var host = _mailSettings.Host;
+            //var port = _mailSettings.Port;
+            //var password = _mailSettings.Password;
+
+
             var host = _mailSettings.Host ?? Environment.GetEnvironmentVariable("Host");
             var port = _mailSettings.Port != 0 ? _mailSettings.Port : int.Parse(Environment.GetEnvironmentVariable("Port")!);
             var password = _mailSettings.Password ?? Environment.GetEnvironmentVariable("Password");

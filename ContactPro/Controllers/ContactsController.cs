@@ -133,8 +133,8 @@ namespace ContactPro.Controllers
             return View(model);
         }
 
-        [Authorize]
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> EmailContact(EmailContactViewModel ecvm)
         {
             if (ModelState.IsValid)
@@ -144,8 +144,9 @@ namespace ContactPro.Controllers
                     await _emailService.SendEmailAsync(ecvm.EmailData.EmailAddress, ecvm.EmailData.Subject, ecvm.EmailData.Body);
                     return RedirectToAction("Index", "Contacts", new { swalMessage = "Success: Email Sent!" });
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
+                    Console.WriteLine(ex.Message);
                     return RedirectToAction("Index", "Contacts", new { swalMessage = "Error: Email Send Failed!" });
                     throw;
                 }

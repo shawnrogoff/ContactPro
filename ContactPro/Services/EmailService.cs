@@ -34,6 +34,7 @@ public class EmailService : IEmailSender
         emailBody.HtmlBody = htmlMessage;
 
         newEmail.Body = emailBody.ToMessageBody();
+        newEmail.Sender = MailboxAddress.Parse(emailSender);
 
         using SmtpClient smtpClient = new();
 

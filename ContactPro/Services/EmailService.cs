@@ -39,26 +39,31 @@ public class EmailService : IEmailSender
 
         try
         {
-            //var host = _mailSettings.Host;
-            //var port = _mailSettings.Port;
-            //var password = _mailSettings.Password;
-
-
             var host = _mailSettings.Host ?? Environment.GetEnvironmentVariable("Host");
             var port = _mailSettings.Port != 0 ? _mailSettings.Port : int.Parse(Environment.GetEnvironmentVariable("Port")!);
             var password = _mailSettings.Password ?? Environment.GetEnvironmentVariable("Password");
 
+            Console.WriteLine("Now going to try to connect to smtpClient...");
+
             await smtpClient.ConnectAsync(host, port, SecureSocketOptions.StartTls);
+            Console.WriteLine("Connection successful...");
+            
+            Console.WriteLine("Now going to try to authenticate...");
             await smtpClient.AuthenticateAsync(emailSender, password);
 
+            Console.WriteLine("Authentication successful...");
+
+            Console.WriteLine("Attempting to send email...");
             await smtpClient.SendAsync(newEmail);
+
+            Console.WriteLine("Disconnecting...");
             await smtpClient.DisconnectAsync(true);
         }
         catch (Exception ex)
         {
             var error = ex.Message;
+            Console.WriteLine(error);
             throw;
         }
-
     }
 }

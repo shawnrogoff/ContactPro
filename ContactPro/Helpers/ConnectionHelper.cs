@@ -9,7 +9,7 @@ public static class ConnectionHelper
         var connectionString = configuration.GetSection("pgSettings")["pgConnection"];
         var databaseUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
 
-        return String.IsNullOrEmpty(connectionString) ? connectionString : BuildConnectionString(databaseUrl);
+        return String.IsNullOrEmpty(databaseUrl) ? connectionString : BuildConnectionString(databaseUrl);
     }
 
     // Build a connection string from the environment

@@ -20,6 +20,9 @@ public class EmailService : IEmailSender
     {
         var emailSender = _mailSettings.Email ?? Environment.GetEnvironmentVariable("Email");
 
+        BodyBuilder emailBody = new BodyBuilder();
+        emailBody.HtmlBody = htmlMessage;
+
         MimeMessage newEmail = new();
 
         foreach (var emailAddress in email.Split(";"))
@@ -28,11 +31,6 @@ public class EmailService : IEmailSender
         }
 
         newEmail.Subject = subject;
-
-        BodyBuilder emailBody = new BodyBuilder();
-
-        emailBody.HtmlBody = htmlMessage;
-
         newEmail.Body = emailBody.ToMessageBody();
         newEmail.Sender = MailboxAddress.Parse(emailSender);
 
@@ -44,20 +42,13 @@ public class EmailService : IEmailSender
             var port = _mailSettings.Port != 0 ? _mailSettings.Port : int.Parse(Environment.GetEnvironmentVariable("Port")!);
             var password = _mailSettings.Password ?? Environment.GetEnvironmentVariable("Password");
 
-            Console.WriteLine("Now going to try to connect to smtpClient...");
-
             await smtpClient.ConnectAsync(host, port, SecureSocketOptions.StartTls);
-            Console.WriteLine("Connection successful...");
             
-            Console.WriteLine("Now going to try to authenticate...");
             await smtpClient.AuthenticateAsync(emailSender, password);
 
-            Console.WriteLine("Authentication successful...");
 
-            Console.WriteLine("Attempting to send email...");
             await smtpClient.SendAsync(newEmail);
 
-            Console.WriteLine("Disconnecting...");
             await smtpClient.DisconnectAsync(true);
         }
         catch (Exception ex)
